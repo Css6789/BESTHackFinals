@@ -135,11 +135,14 @@ def form_correct_confirmed(callback):
     form = user_dict[callback.message.chat.id]
     msg = send_form_to_channel(bot, form)
     hash_to_channel_message_id[hash(msg.text)] = msg.message_id
+    bot.delete_message(callback.message.chat.id, callback.message.id)
+    bot.send_message(callback.message.chat.id, "Ваша заявка принята! Ожидайте её разбора инженерами в канале https://t.me/+y1YHxYMDrPlmYjIy")
 
 @bot.callback_query_handler(func=lambda message: str_eq(message.data, FORM_INCORRECT_CALLBACK))
 def form_incorrect_confirmed(callback):
     user_dict[callback.message.chat.id] = Form()
-    bot.send_message(callback.from_user.id, "Форма очищена. Введите /start, чтобы начать сначала.")
+    bot.delete_message(callback.message.chat.id, callback.message.id)
+    bot.send_message(callback.message.from_user.id, "Форма очищена. Введите /start, чтобы начать сначала.")
 
 @bot.message_handler(commands=['takeon'])
 def take_on(message):
